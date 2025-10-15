@@ -1,0 +1,44 @@
+{% load static %}
+<body>
+    <h1>My Movie Watchlist</h1>
+
+    <div class="header-section">
+        <div class="logout-form">
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+            <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        
+        <div class="header-links">
+            <a href="{% url 'add_movie' %}" class="add-movie-button">Add New Movie</a> 
+        </div>
+    </div>
+    
+    <ul class="watchlist">
+        {% for item in watchlist_items %} 
+            <li>
+                <div class="movie-info">
+                    <span class="movie-title">
+                        {{ item.movie.title }} 
+                        {% if item.movie.release_year %}
+                            ({{ item.movie.release_year }})
+                        {% endif %}
+                    </span>
+                    
+                    <span class="movie-status">
+                        Status: **{{ item.status|title }}** | 
+                        Rating: **{{ item.rating|default:"N/A" }}** </span>
+                </div>
+                
+                <div class="actions-links">
+                    <a href="{% url 'edit_movie' item.movie.id %}" class="edit-link">Edit</a> 
+                    <a href="{% url 'delete_movie' item.movie.id %}" class="delete-link">Delete</a>
+                </div>
+            </li>
+        {% empty %}
+            <li>No movies in your list yet.</li>
+        {% endfor %}
+    </ul>
+</body>
